@@ -2,17 +2,16 @@
 module.exports = function(app) {
     var teacherController = require('../controllers/teacherlyController');
   
-    // todoList Routes
     app.route('/api/register')
-      .post(teacherController.teacherRegister);
+      .post(teacherController.Register);
   
     app.route('/api/commonstudents')
-      .get(teacherController.teacherCommonStudent);
+      .get(teacherController.CommonStudent);
 
     app.route('/api/suspend')
-      .post(teacherController.teacherSuspend);
+      .post(teacherController.Suspend);
 
     app.route('/api/retrievefornotifications')
-      .post(teacherController.teacherRetrieveNotifications);
-  };
+      .post(teacherController.RetrieveNotifications);
+};
   
