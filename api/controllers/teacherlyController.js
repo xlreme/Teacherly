@@ -7,20 +7,9 @@ exports.RegisterStudents = function(req,res) {
     
     var condition = new Entity(req.body);
 
-    if(condition.TeacherEmail == null || condition.StudentEmails == null)
-        return res.status(400).send({ "Input Error": "Please input Teacher's and Students's emails" });
-
-    var validatEmail = true;
-    condition.StudentEmails.forEach(email => {
-            if (!RegexValidateEmail(email))
-                validatEmail = false;
-    })
-    if(!validatEmail)
-        return res.status(400).send({ "Input Error": "Invalid Student's Email." });
-
-    if(!RegexValidateEmail(condition.TeacherEmail))
-        return res.status(400).send({ "Input Error": "Invalid Teacher's Email." });
-
+    var outcome = validation(condition,"RegisterStudents");
+    if(outcome)
+        return res.status(400).send(outcome);
     
     Entity.register(condition, function(err, result) {
             if (err){
@@ -35,17 +24,9 @@ exports.RetrieveCommonStudents = function(req,res) {
 
     var condition = new Entity(req.query);
 
-    if(condition.TeacherEmail == null)
-        return res.status(400).send({ "Input Error": "Please input Teachers's emails" });
-    
-    var validatEmail = true;
-    condition.TeacherEmail.forEach(email => {
-            if (!RegexValidateEmail(email))
-                validatEmail = false;
-    })
-
-    if(!validatEmail)
-        return res.status(400).send({ "Input Error": "Invalid Teacher's Email." });
+    var outcome = validation(condition,"RetrieveCommonStudents");
+    if(outcome)
+        return res.status(400).send(outcome);
 
     //To get email count so that we can determine common students.
     if(Array.isArray(condition.TeacherEmail)){
@@ -74,11 +55,10 @@ exports.SuspendStudent = function(req,res) {
     
     var condition = new Entity(req.body);
 
-    if(condition.StudentEmail == null)
-        return res.status(400).send({ "Input Error": "Please input Student's emails." });
-    
-    if(!RegexValidateEmail(condition.StudentEmail))
-        return res.status(400).send({ "Input Error": "Invalid Student's Email." });
+    var outcome = validation(condition,"SuspendStudent");
+
+    if(outcome)
+        return res.status(400).send(outcome);
 
     Entity.suspendStudent(condition, function(err, result) {
         if (err){
@@ -93,10 +73,9 @@ exports.RetrieveNotifications = function(req,res) {
     
     var condition = new Entity(req.body);
 
-    if(condition.TeacherEmail == null || condition.Notification == null)
-        return res.status(400).send({ "Input Error": "Please input Teacher's email and notification message." });
-    else if(!RegexValidateEmail(condition.TeacherEmail))
-        return res.status(400).send({ "Input Error": "Invalid Teacher's Email." });
+    var outcome = validation(condition,"RetrieveNotifications");
+    if(outcome)
+        return res.status(400).send(outcome);
 
     var notificationHandler = RegexGetEmailArrayFromNotificationString(condition.Notification);
 
@@ -122,6 +101,60 @@ exports.RetrieveNotifications = function(req,res) {
             return res.send({recipients});
         }             
     });
+}
+
+
+function validation(condition, func){
+
+    if(func === "RegisterStudents"){
+ 
+        if(condition.TeacherEmail == null || condition.TeacherEmail === "" || condition.StudentEmails == null || condition.StudentEmails === "")
+        return { "Input Error": "Please input Teacher's and Students's emails" };
+        
+        var validatEmail = true;
+            condition.StudentEmails.forEach(email => {
+                    if (!RegexValidateEmail(email))
+                        validatEmail = false;
+            })
+
+        if(!validatEmail)
+        return { "Input Error": "Invalid Student's Email." };
+
+        if(!RegexValidateEmail(condition.TeacherEmail))
+        return { "Input Error": "Invalid Teacher's Email." };
+            
+    }else if(func === "RetrieveCommonStudents"){
+
+        if(condition.TeacherEmail == null || condition.TeacherEmail === "" )
+        return { "Input Error": "Please input Teachers's emails" };
+    
+        var validatEmail = true;
+        condition.TeacherEmail.forEach(email => {
+                if (!RegexValidateEmail(email))
+                    validatEmail = false;
+        })
+
+        if(!validatEmail)
+        return { "Input Error": "Invalid Teacher's Email." };
+
+    }else if(func === "SuspendStudent"){
+
+        if(condition.StudentEmail == null || condition.StudentEmail === "")
+        return { "Input Error": "Please input Student's emails." };
+    
+        if(!RegexValidateEmail(condition.StudentEmail))
+        return { "Input Error": "Invalid Student's Email." };
+    
+    }else if(func === "RetrieveNotifications"){
+
+        if(condition.TeacherEmail == null || condition.TeacherEmail === "" || condition.Notification == null || condition.Notification === "")
+        return { "Input Error": "Please input Teacher's email and notification message." };
+        
+        if(!RegexValidateEmail(condition.TeacherEmail))
+        return { "Input Error": "Invalid Teacher's Email." };
+    }
+
+    
 }
 
 function RegexGetEmailArrayFromNotificationString(bunchesOfEmail){

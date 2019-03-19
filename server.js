@@ -1,8 +1,6 @@
 //Webserver configuration
 const bodyParser = require('body-parser')
 const app = require('express')()
-  // app = express(),
-  // port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
