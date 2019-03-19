@@ -3,7 +3,7 @@
 var Entity = require('../models/teacherlyModel');
 
 
-exports.Register = function(req,res) {
+exports.RegisterStudents = function(req,res) {
     console.log(req.body);
     var newEntry = new Entity(req.body);
     if(!newEntry.TeacherEmail || !newEntry.StudentEmails){
@@ -25,11 +25,13 @@ exports.Register = function(req,res) {
 
             Entity.register(TeacherStudents, function(err, result) {
                 if (err){
-                    console.log(err); 
+                    error = error + err; 
                 }              
             });
             i++;
         });
+
+        console.log(error);
 
         if(!error === "")
         {
@@ -41,12 +43,38 @@ exports.Register = function(req,res) {
     }
 }
 
-exports.CommonStudent = function(req,res) {
-    
+exports.RetrieveCommonStudents = function(req,res) {
+
+    var condition;
+    if(Array.isArray(req.query.teacher)){
+        condition = new Entity(req.query);
+        condition.StudentEmailCount = condition.TeacherEmail.length
+    }else{
+        condition = new Entity(req.query);
+        condition.StudentEmailCount = 1;
+    }
+
+    console.log();
+    console.log(condition);
+
+    Entity.retrieveCommonStudent(condition, function(err, result) {
+        if (err){
+            res.status(500).send(err)
+        }else{
+            res.send(result);
+        }             
+    });
 }
 
-exports.Suspend = function(req,res) {
+exports.SuspendStudent = function(req,res) {
     
+    Entity.suspendStudent(TeacherStudents, function(err, result) {
+        if (err){
+            error = error + err; 
+        }else{
+            res.status(204).send();
+        }             
+    });
 }
 
 exports.RetrieveNotifications = function(req,res) {

@@ -3,13 +3,13 @@ module.exports = function(app) {
     var teacherController = require('../controllers/teacherlyController');
   
     app.route('/api/register')
-      .post(teacherController.Register);
+      .post(teacherController.RegisterStudents);
   
     app.route('/api/commonstudents')
-      .get(teacherController.CommonStudent);
+      .get(teacherController.RetrieveCommonStudents);
 
     app.route('/api/suspend')
-      .post(teacherController.Suspend);
+      .post(teacherController.SuspendStudent);
 
     app.route('/api/retrievefornotifications')
       .post(teacherController.RetrieveNotifications);
