@@ -41,7 +41,11 @@ To run unit testing
 ```
 Navigate to root folder, run npm test
 ```
+To run Postman testing
 
+```
+Import Teacherly.postman_collection.json into postman (include desired payload)
+```
 
 ## Built With
 
