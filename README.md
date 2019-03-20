@@ -24,6 +24,7 @@ A step by step on how to get a development env running
 ```
 1) Will be using root user for database access
 2) Run each commands in Database script.sql
+3) For development purpose, root user, port 3306 will be used to access the database.
 ```
 
 ### On NodeJS
@@ -32,6 +33,7 @@ A step by step on how to get a development env running
 1) Git Clone https://github.com/xlreme/Teacherly to your local
 2) Navigate to project package.json directory, update module using npm install
 3) Start project using npm start.
+4) For development purpose, default server port will be 3000.
 ```
 
 ## Running the tests
