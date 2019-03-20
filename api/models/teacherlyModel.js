@@ -13,7 +13,9 @@ Entity.register = function registerUsers(condition, result){
     
     var emailarray = [];
 
-    condition.StudentEmails.forEach(email => {
+    var uniqueStudentEmails = [...new Set(condition.StudentEmails)];
+
+    uniqueStudentEmails.forEach(email => {
         emailarray.push([condition.TeacherEmail, email]);
     });
 

@@ -129,10 +129,16 @@ function validation(condition, func){
         return { "Input Error": "Please input Teachers's emails" };
     
         var validatEmail = true;
-        condition.TeacherEmail.forEach(email => {
+        
+        if(Array.isArray(condition.TeacherEmail)){
+            condition.TeacherEmail.forEach(email => {
                 if (!RegexValidateEmail(email))
                     validatEmail = false;
-        })
+            })
+        }else{
+            if(!RegexValidateEmail(condition.TeacherEmail))
+                validatEmail = false;
+        }
 
         if(!validatEmail)
         return { "Input Error": "Invalid Teacher's Email." };

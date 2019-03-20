@@ -11,3 +11,5 @@ routes(app); //register the route
 app.listen(port);
 
 console.log('Teacherly RESTful API server started on: ' + port);
+
+module.exports = app; //For testing
